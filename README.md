@@ -1,7 +1,7 @@
-🐛 AI Bug Report Enhancer
+🐛 AI Bug Report Enhancer:
 A powerful, AI-driven QA tool designed to streamline bug reporting. Simply upload a screenshot of a software defect, and the application will use advanced AI Vision models to analyze the image, generate a professional-grade bug report, and push it directly to JIRA with a single click!
 
-✨ Features
+✨ Features:
 Stateless Architecture: Zero server-side credential storage. "Bring Your Own Key" (BYOK) architecture keeps the application secure and lightweight.
 AI Vision Analysis: Powered by Groq's blazing-fast Llama-3/Qwen vision models to automatically detect UI defects, missing elements, and server errors from screenshots.
 Enterprise-Grade Bug Reports: Automatically structures reports with Bug Titles, Environment, Pre-conditions, Test Data, Steps to Reproduce, and Priority rankings based on Senior QA standards.
