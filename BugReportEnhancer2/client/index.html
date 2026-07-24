@@ -1,0 +1,204 @@
+that will be we crete the
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="AI-powered bug report enhancer with JIRA integration. Drop a screenshot, get an AI-analyzed bug report, and push to JIRA in one click." />
+  <title>Bug Report Enhancer — AI-Powered QA Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header / Tab Navigation (Settings Moved) -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">✨</span>
+          <span class="logo-text">AI Bug Report Enhancer</span>
+        </div>
+        <button id="btn-open-settings" class="btn-icon header-btn" title="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Wizard Progress Indicator -->
+      <div class="wizard-steps">
+        <div class="step active" id="step-indicator-1">1. Upload</div>
+        <div class="step-divider"></div>
+        <div class="step" id="step-indicator-2">2. Context</div>
+        <div class="step-divider"></div>
+        <div class="step" id="step-indicator-3">3. Review</div>
+      </div>
+
+      <!-- Step 1: Upload Page -->
+      <section id="step-1" class="wizard-pane active">
+        <div class="page-container">
+          <div class="hero-text">
+            <h1>Automate your QA Workflow</h1>
+            <p>Upload a screenshot and let AI generate a comprehensive bug report in seconds.</p>
+          </div>
+          <!-- Drop Zone -->
+          <div id="drop-zone" class="drop-zone glass-panel">
+            <div class="drop-zone-content">
+              <div class="drop-zone-icon">📸</div>
+              <h2 class="drop-zone-title">Drag & Drop Screenshot</h2>
+              <p class="drop-zone-subtitle">or click to browse files</p>
+              <p class="drop-zone-hint">Supports PNG, JPG, WEBP (Max 4MB)</p>
+            </div>
+            <input type="file" id="file-input" accept="image/*" hidden />
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 2: Context & Analysis -->
+      <section id="step-2" class="wizard-pane hidden">
+        <div class="page-container glass-panel p-6">
+          <button id="btn-back-step-1" class="btn-back">← Back</button>
+
+          <div class="split-view">
+            <div class="preview-side">
+              <div id="image-preview-container" class="image-preview-container">
+                <div class="image-preview-header">
+                  <span id="file-name" class="file-name"></span>
+                </div>
+                <img id="image-preview" class="image-preview" alt="Screenshot preview" />
+              </div>
+            </div>
+
+            <div class="context-side">
+              <h3>Additional Context</h3>
+              <p class="text-muted mb-4">Help the AI by providing context, expected behavior, or steps to reproduce.</p>
+              <textarea id="additional-notes" class="notes-textarea"
+                placeholder="Describe what you were doing when the bug occurred..." rows="6"></textarea>
+
+              <button id="analyze-btn" class="btn-primary mt-4 btn-glow">
+                <span class="btn-text">✨ Analyze with AI</span>
+                <span class="btn-loader hidden">
+                  <span class="spinner"></span>
+                  Processing...
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Review & JIRA Push -->
+      <section id="step-3" class="wizard-pane hidden">
+        <div class="page-container">
+          <div class="glass-panel p-6 analysis-layout">
+            <div class="analysis-header flex-between mb-4">
+              <div>
+                <h3 class="gradient-text">🤖 AI Analysis Complete</h3>
+                <span class="analysis-model">Llama Scout</span>
+              </div>
+              <button id="btn-restart" class="btn-secondary">Start Over</button>
+            </div>
+
+            <div id="analysis-content" class="analysis-content markdown-body mb-6"></div>
+
+            <div class="action-footer">
+              <button id="push-jira-btn" class="btn-primary btn-jira">
+                <span class="btn-text">🚀 Push to JIRA</span>
+                <span class="btn-loader hidden">
+                  <span class="spinner"></span>
+                  Pushing...
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Modal -->
+      <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-panel">
+          <div class="modal-header">
+            <h2>Settings</h2>
+            <button id="btn-close-settings" class="btn-icon">✕</button>
+          </div>
+          <form id="settings-form" class="modal-body" onsubmit="event.preventDefault();">
+            <!-- JIRA Connection -->
+            <div class="settings-card mb-4">
+              <div class="settings-card-header">
+                <h3>🔗 JIRA Details</h3>
+              </div>
+              <div class="settings-card-body">
+                <div class="field-group">
+                  <label for="jira-project" class="field-label">Project Key</label>
+                  <input type="text" id="jira-project" name="jira-project" autocomplete="on" class="field-input"
+                    placeholder="e.g., VWO" />
+                </div>
+                <div class="field-group">
+                  <label for="jira-email" class="field-label">Email</label>
+                  <input type="email" id="jira-email" name="email" autocomplete="email" class="field-input"
+                    placeholder="your-email@company.com" />
+                </div>
+                <div class="field-group">
+                  <label for="jira-token" class="field-label">API Token</label>
+                  <input type="password" id="jira-token" name="jira-token" autocomplete="current-password"
+                    class="field-input" placeholder="Your Atlassian API token" />
+                </div>
+                <div class="field-group">
+                  <label for="jira-url" class="field-label">JIRA URL</label>
+                  <input type="url" id="jira-url" name="url" autocomplete="url" class="field-input"
+                    placeholder="https://yourteam.atlassian.net" />
+                </div>
+                <div class="field-group">
+                  <label for="jira-issue-type" class="field-label">Issue Type</label>
+                  <input type="text" id="jira-issue-type" name="jira-issue-type" autocomplete="on" class="field-input"
+                    placeholder="e.g., Task, Epic, Subtask" />
+                </div>
+                <button type="button" id="test-jira-btn" class="btn-secondary btn-test w-full mt-2">
+                  <span class="btn-text">Test Connection</span>
+                  <span class="btn-loader hidden"><span class="spinner"></span></span>
+                </button>
+                <div id="jira-test-result" class="test-result hidden mt-2"></div>
+              </div>
+            </div>
+
+            <!-- GROQ API Key -->
+            <div class="settings-card mb-4">
+              <div class="settings-card-header">
+                <h3>🧠 GROQ API Key</h3>
+              </div>
+              <div class="settings-card-body">
+                <div class="field-group">
+                  <label for="groq-key" class="field-label">API Key</label>
+                  <input type="password" id="groq-key" name="groq-key" autocomplete="current-password"
+                    class="field-input" placeholder="gsk_..." />
+                </div>
+                <button type="button" id="test-groq-btn" class="btn-secondary btn-test w-full mt-2">
+                  <span class="btn-text">Test Connection</span>
+                  <span class="btn-loader hidden"><span class="spinner"></span></span>
+                </button>
+                <div id="groq-test-result" class="test-result hidden mt-2"></div>
+              </div>
+            </div>
+
+            <button type="submit" id="save-settings-btn" class="btn-primary w-full mt-2">Save Settings</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Toasts -->
+      <div id="toast" class="toast hidden">
+        <span id="toast-icon" class="toast-icon"></span>
+        <span id="toast-message" class="toast-message"></span>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
